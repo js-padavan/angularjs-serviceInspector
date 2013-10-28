@@ -1,0 +1,22 @@
+<!doctype html>
+
+<html ng-csp ng-app="app">
+<head>
+	<script src="./js/vendor/angular.js"></script>
+	<script src="./js/controller.js"></script>
+	<script src="./js/services/pageDebuggerMOCK.js"></script>
+	<script src="./js/directives/servicesList.js"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap-responsive.css">
+	<script src="./js/vendor/ui-bootstrap.js"></script>
+</head>
+<body>
+	<div ng-controller="appCtrl">Test 
+		<input ng-model="test"> {{test}}
+		<button ng-click="refresh($event)">refresh</button>
+		<services-list user-services="userDefinedServices"></services-list>
+	</div>
+</body>
+</html>
