@@ -5,14 +5,17 @@ app.directive('servicesList', function(pageDebugger) {
 			userServices : '='
 		},
 			// I can't add ng-click on accordion-group, I can observe is-open variable, but I will have to watch all array or make deep watch
-		template : '<accordion close-others="false">'+
-						'<accordion-group ng-repeat="item in userServices" heading={{item.name}} ng-click="loadServiceInfo()">' +
-							'{{item.data}}' +
-						'</accordion-group>'+
-					'</accordion>',
+		templateUrl : './partials/servicesList.html',
 		link : function(scope, iElement) {
+
+			scope.currentService = scope.userServices[0];
 			pageDebugger.log('test debug');
-			pageDebugger.log(scope.userServices);
+
+			for (var i in scope.userServices) {
+				scope.userServices[i].isActive  = false;
+			}
+
+			scope.userServices[0].isActive = true;
 
 			scope.loadServiceInfo = function() {
 				pageDebugger.log('click event');
@@ -20,6 +23,13 @@ app.directive('servicesList', function(pageDebugger) {
 			}
 			scope.test = function() {
 				pageDebugger.log('test click');
+			}
+
+			scope.selectService = function(index) {
+				pageDebugger.log(index);
+				scope.currentService.isActive = false;
+				scope.currentService = scope.userServices[index];
+				scope.userServices[index].isActive = true;
 			}
 		}
 	}

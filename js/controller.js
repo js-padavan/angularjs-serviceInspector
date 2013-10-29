@@ -14,8 +14,8 @@ app.controller('appCtrl', function($scope, pageDebugger) {
 		$event.stopPropagation();
 	}
 
-	setTimeout(function() {
-		pageDebugger.log($scope.userDefinedServices);
-		pageDebugger.log('services updated');
-	}, 3000);
+	// setTimeout(function() {
+	// 	pageDebugger.log($scope.userDefinedServices);
+	// 	pageDebugger.log('services updated');
+	// }, 3000);
 })
