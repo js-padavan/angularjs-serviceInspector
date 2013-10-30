@@ -7,29 +7,22 @@ app.directive('servicesList', function(pageDebugger) {
 			// I can't add ng-click on accordion-group, I can observe is-open variable, but I will have to watch all array or make deep watch
 		templateUrl : './partials/servicesList.html',
 		link : function(scope, iElement) {
+			//scope.currentService = undefined;
 
-			scope.currentService = scope.userServices[0];
-			pageDebugger.log('test debug');
+			
 
-			for (var i in scope.userServices) {
-				scope.userServices[i].isActive  = false;
-			}
 
-			scope.userServices[0].isActive = true;
+			scope.activeElementIndex = 0;
 
-			scope.loadServiceInfo = function() {
-				pageDebugger.log('click event');
-				// pageDebugger.log($event.target);
-			}
-			scope.test = function() {
-				pageDebugger.log('test click');
-			}
+		
+			scope.$on('AllServicesObtained', function() {
+				scope.$apply();
+			})
 
 			scope.selectService = function(index) {
-				pageDebugger.log(index);
-				scope.currentService.isActive = false;
-				scope.currentService = scope.userServices[index];
-				scope.userServices[index].isActive = true;
+				pageDebugger.log('service selected');
+				scope.activeElementIndex = index;
+				//scope.currentService = scope.userServices[index];
 			}
 		}
 	}

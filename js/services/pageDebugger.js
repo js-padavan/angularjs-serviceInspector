@@ -9,10 +9,12 @@ function log(text) {
 };
 
 
-app.service('pageDebugger', function() {
+app.service('pageDebugger', function($rootScope) {
 	var self = this;
 	
 	this.userServices = [];
+
+	this.__servicesObtainedNum = 0;
 
 
 		// printing debugging info to console
@@ -32,7 +34,7 @@ app.service('pageDebugger', function() {
 	};
 
 		// returning app module of debugging app
-	this.getModuleInjection = function () {
+	this.getModuleInjection = function () {		
 		var element = angular.element($("[ng-app]"));
 		return angular.module(element.attr("ng-app"));
 	};
@@ -46,7 +48,14 @@ app.service('pageDebugger', function() {
 			if (module._invokeQueue[elem][1] === 'service'){
 				var item = {};
 				item.name =  module._invokeQueue[elem][2][0];
-				item.data = self.getService(item.name, item);
+				var temp = function() {
+					self.__servicesObtainedNum++;
+					if (self.__servicesObtainedNum === self.userServices.length) {
+						self.log('all services downloaded');
+						$rootScope.$broadcast('AllServicesObtained');
+					}
+				}
+				item.data = self.getService(item.name, item, temp);
 				self.userServices.push(item);
 			}
 		}
@@ -54,7 +63,7 @@ app.service('pageDebugger', function() {
 	};
 
 
-	this.getService = function(serviceName, storage) {
+	this.getService = function(serviceName, storage, successCB) {
 		self.log('getting service ' + serviceName);
 		chrome.devtools.inspectedWindow.eval('(' + self.getServiceInjection.toString() + '("' + serviceName + '"))',
 			function(result, isException) {
@@ -63,9 +72,10 @@ app.service('pageDebugger', function() {
 					self.log(isException);
 				}
 				else {
-					self.log('service obtained');
-					self.log(result);
+					self.log(serviceName + ' service obtained');
 					storage.data = result;
+						// вставить бы сюда нотификатор о том что 
+					successCB ?	successCB() : null;
 				}
 			}
 		);
@@ -91,6 +101,7 @@ app.service('pageDebugger', function() {
 
 		// I should make it another way
 	this.refresh = function() {
+		self.__servicesObtainedNum = 0;
 		this.getAppModule();
 	}
 

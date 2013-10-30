@@ -1,11 +1,10 @@
-var app = angular.module('app', ['ui.bootstrap']);
+var app = angular.module('app', []);
 
 
 
 
 
 app.controller('appCtrl', function($scope, pageDebugger) {
-	$scope.test = 'sadsadsa';
 	$scope.userDefinedServices = pageDebugger.userServices;
 
 
@@ -13,9 +12,4 @@ app.controller('appCtrl', function($scope, pageDebugger) {
 		pageDebugger.refresh();
 		$event.stopPropagation();
 	}
-
-	// setTimeout(function() {
-	// 	pageDebugger.log($scope.userDefinedServices);
-	// 	pageDebugger.log('services updated');
-	// }, 3000);
 })
