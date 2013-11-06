@@ -1,13 +1,3 @@
-function log(text) {
-	if (angular.isObject(text)) {
-		text = JSON.stringify(text);
-	}
-	if (text == undefined) {
-		text = "undefined";
-	}
-	chrome.experimental.devtools.console.addMessage('log', text);
-};
-
 
 app.service('pageDebugger', function($rootScope) {
 	var self = this;
@@ -17,7 +7,7 @@ app.service('pageDebugger', function($rootScope) {
 	this.__servicesObtainedNum = 0;
 
 
-		// printing debugging info to console
+		//!!DEBUGING FEATURE printing debugging info to console
 	this.log = function (text) {
 		if (angular.isObject(text)) {
 			text = JSON.stringify(text);
@@ -28,7 +18,6 @@ app.service('pageDebugger', function($rootScope) {
 
 		// code which will be executed on expected window
 	this.getServiceInjection = function (serviceName) {
-		console.log('obtaining ' + serviceName);
 		var element = angular.element($("[ng-app]"));
 		return element.injector().get(serviceName);
 	};
@@ -51,7 +40,6 @@ app.service('pageDebugger', function($rootScope) {
 				var temp = function() {
 					self.__servicesObtainedNum++;
 					if (self.__servicesObtainedNum === self.userServices.length) {
-						self.log('all services downloaded');
 						$rootScope.$broadcast('AllServicesObtained');
 					}
 				}
@@ -59,12 +47,10 @@ app.service('pageDebugger', function($rootScope) {
 				self.userServices.push(item);
 			}
 		}
-		self.log(self.userServices);
 	};
 
 
 	this.getService = function(serviceName, storage, successCB) {
-		self.log('getting service ' + serviceName);
 		chrome.devtools.inspectedWindow.eval('(' + self.getServiceInjection.toString() + '("' + serviceName + '"))',
 			function(result, isException) {
 				if (isException) {
@@ -72,7 +58,6 @@ app.service('pageDebugger', function($rootScope) {
 					self.log(isException);
 				}
 				else {
-					self.log(serviceName + ' service obtained');
 					storage.data = result;
 						// вставить бы сюда нотификатор о том что 
 					successCB ?	successCB() : null;
@@ -91,8 +76,6 @@ app.service('pageDebugger', function($rootScope) {
 		       		self.log(isException);
 		       }
 		       else{
-		         	self.log("module obtained");
-		       		self.log(result);
 		       		self.getServicesList(result);
 		       }
 		     }
